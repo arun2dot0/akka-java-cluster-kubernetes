@@ -1,0 +1,39 @@
+docker build -t akka-cluster-demo:1.0.0 .
+
+docker run -dP --rm akka-cluster-demo:1.0.0
+
+kubectl create -f add-akka-cluster-1.json
+kubectl apply -f kubernetes/akka-cluster-rolebindging.yml
+
+kubectl config set-context $(kubectl config current-context) --namespace=akka-cluster-1
+
+setup
+kubectl apply -f kubernetes/akka-cluster-deployment.yml
+kubectl apply -f kubernetes/ingress.yml
+kubectl apply -f kubernetes/service.yml
+
+describe /check
+kubectl describe deployment akka-cluster-demo
+
+delete clean up
+kubectl delete deployment akka-cluster-demo
+kubectl delete deployment akka-cluster-demo
+kubectl delete service  akka-cluster-demo
+
+port-forward
+kubectl port-forward service/akka-cluster-demo 8080
+
+
+http://localhost:8080
+
+kubectl scale deployment/akka-cluster-demo --replicas=3
+
+
+Issue
+
+arunkanchi@Aruns-Mac-mini akka-java-cluster-kubernetes % kubectl port-forward service/akka-cluster-demo 8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+Handling connection for 8080
+E1216 11:04:31.615984    3574 portforward.go:406] an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod 010d283ae4b57a00fa03deef3c6dad2de8c350db9cdcd2f9004867867de3e939, uid : exit status 1: 2021/12/16 19:04:31 socat[18233] E connect(16, AF=2 127.0.0.1:8080, 16): Connection refused
+E1216 11:04:31.616776    3574 portforward.go:234] lost connection to pod

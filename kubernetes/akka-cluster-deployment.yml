@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -6,7 +6,7 @@ metadata:
   name: akka-cluster-demo
   namespace: akka-cluster-1
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
      app: akka-cluster-demo
@@ -25,10 +25,10 @@ spec:
       containers:
       - name: akka-cluster-demo
 # Use the following line when running with minishift
-#        image: akka-cluster-demo:1.0.0
+        image: akka-cluster-demo:1.0.0
 # Use the following line when running with OpenShift and using the internal container registry
-        image: image-registry.openshift-image-registry.svc:5000/akka-cluster-1/akka-cluster-demo:1.0.0
-        imagePullPolicy: Always
+#        image: image-registry.openshift-image-registry.svc:5000/akka-cluster-1/akka-cluster-demo:1.0.0
+        imagePullPolicy: Never
         livenessProbe:
           tcpSocket:
             port: 8558
